@@ -111,38 +111,64 @@ describe('<AdminRoutes>', () => {
     });
 
     it('should accept a function as children and declare the returned resources', async () => {
+        const userCheck = jest.fn();
         const declareResources = jest.fn();
+        const children = jest.fn(() =>
+            resources.map(resource => (
+                <Foo {...resource} /> // eslint-disable-line react/jsx-key
+            ))
+        );
         const Foo = () => <span />;
         await shallow(
-            <AdminRoutes declareResources={declareResources}>
-                {() =>
-                    resources.map(resource => (
-                        <Foo {...resource} /> // eslint-disable-line react/jsx-key
-                    ))}
+            <AdminRoutes
+                userCheck={userCheck}
+                permissions="permissions"
+                declareResources={declareResources}
+            >
+                {children}
             </AdminRoutes>
         )
             .instance()
-            .componentDidMount();
+            .componentWillReceiveProps({
+                children,
+                permissions: 'newPermissions',
+                declareResources,
+            });
 
+        assert.deepEqual(children.mock.calls[0][0], 'newPermissions');
         assert.deepEqual(declareResources.mock.calls[0][0], resources);
     });
 
     it('should accept a promise as children and declare the returned resources', async () => {
+        const userCheck = jest.fn();
         const declareResources = jest.fn();
         const Foo = () => <span />;
+
+        const children = jest.fn(() =>
+            Promise.resolve(
+                resources.map(resource => (
+                    <Foo {...resource} /> // eslint-disable-line react/jsx-key
+                ))
+            )
+        );
+
         await shallow(
-            <AdminRoutes declareResources={declareResources}>
-                {() =>
-                    Promise.resolve(
-                        resources.map(resource => (
-                            <Foo {...resource} /> // eslint-disable-line react/jsx-key
-                        ))
-                    )}
+            <AdminRoutes
+                userCheck={userCheck}
+                permissions="permissions"
+                declareResources={declareResources}
+            >
+                {children}
             </AdminRoutes>
         )
             .instance()
-            .componentDidMount();
+            .componentWillReceiveProps({
+                children,
+                permissions: 'newPermissions',
+                declareResources,
+            });
 
+        assert.deepEqual(children.mock.calls[0][0], 'newPermissions');
         assert.deepEqual(declareResources.mock.calls[0][0], resources);
     });
 });

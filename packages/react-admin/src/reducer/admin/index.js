@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import auth from './auth';
+import auth, { getPermissions as innerGetPermissions } from './auth';
 import resources, { getResources as innerGetResources } from './resource';
 import loading from './loading';
 import notification from './notification';
@@ -20,3 +20,5 @@ export default combineReducers({
 });
 
 export const getResources = state => innerGetResources(state.resources);
+export const getPermissions = (state, options) =>
+    innerGetPermissions(state.auth, options);

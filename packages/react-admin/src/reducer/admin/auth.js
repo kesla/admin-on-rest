@@ -8,42 +8,42 @@ const initialState = {
     permissions: {},
 };
 
-const getPermissionsKey = (route, resource, routeParams) => {
-    let params = '';
+const getPermissionsKey = ({ key = '@ra-root', resource, params }) => {
+    let keyParams = '';
 
-    if (routeParams) {
-        const keys = Object.keys(routeParams);
+    if (params) {
+        const keys = Object.keys(params);
 
         if (keys.length > 0) {
-            params = keys.reduce(
-                (acc, key, index) =>
-                    `${acc}${routeParams[key]}${index < keys.lenth ? '/' : ''}`,
+            keyParams = keys.reduce(
+                (acc, name, index) =>
+                    `${acc}${params[name]}${index < keys.lenth ? '/' : ''}`,
                 '/'
             );
         }
     }
 
     if (resource) {
-        return `${resource}/${route}${params}`;
+        return `${resource}/${key}${keyParams}`;
     }
 
-    return `${route}${params}`;
+    return `${key}${keyParams}`;
 };
 
 export default (previousState = initialState, action) => {
     switch (action.type) {
         case USER_CHECK_SUCCESS: {
             const { resource, route } = action.meta;
-            const key = getPermissionsKey(
-                route,
+            const fullKey = getPermissionsKey({
+                key: route,
                 resource,
-                action.meta ? action.meta.routeParams : undefined
-            );
+                params: action.meta ? action.meta.routeParams : undefined,
+            });
             return {
                 ...previousState,
                 permissions: {
                     ...previousState.permissions,
-                    [key]: action.payload,
+                    [fullKey]: action.payload,
                 },
             };
         }
@@ -57,10 +57,10 @@ export default (previousState = initialState, action) => {
     }
 };
 
-export const getPermissions = (state, { route, resource, params }) => {
-    const key = getPermissionsKey(route, resource, params);
-    if (state && state.admin && state.admin.auth) {
-        return state.admin.auth.permissions[key];
+export const getPermissions = (state, { key, resource, params }) => {
+    const fullKey = getPermissionsKey(key, resource, params);
+    if (state && state.permissions) {
+        return state.permissions[fullKey];
     }
 
     return null;

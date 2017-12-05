@@ -12,7 +12,7 @@ import {
     declareResources as declareResourcesAction,
     userCheck as userCheckAction,
 } from './actions';
-import { getPermissions } from './reducer/admin/auth';
+import { getPermissions } from './reducer';
 
 export class AdminRoutes extends Component {
     componentDidMount() {
@@ -26,8 +26,7 @@ export class AdminRoutes extends Component {
     }
 
     getPermissions = () => {
-        const { userCheck, location, match } = this.props;
-        userCheck({}, location && location.pathname, match && match.params);
+        this.props.userCheck();
     };
 
     async initializeResources(props) {
@@ -139,7 +138,7 @@ const mapStateToProps = state => ({
     resources: Object.keys(state.admin.resources).map(
         key => state.admin.resources[key].props
     ),
-    permissions: getPermissions(state, '@ra/resources'),
+    permissions: getPermissions(state, { key: '@ra/resources' }),
 });
 
 export default compose(

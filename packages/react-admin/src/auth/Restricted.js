@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { userCheck } from '../actions/authActions';
-import { getPermissions } from '../reducer/admin/auth';
+import { getPermissions } from '../reducer';
 
 /**
  * Restrict access to children
@@ -76,7 +76,7 @@ const mapStateToProps = (state, props) => {
     const { authParams, match } = props;
     return {
         permissions: getPermissions(state, {
-            route: authParams.route,
+            key: authParams.route,
             resource: authParams.resource,
             params: match ? match.params : undefined,
         }),

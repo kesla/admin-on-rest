@@ -10,7 +10,6 @@ import Title from '../layout/Title';
 import { crudGetOne as crudGetOneAction } from '../../actions/dataActions';
 import DefaultActions from './ShowActions';
 import translate from '../../i18n/translate';
-import withChildrenAsFunction from '../withChildrenAsFunction';
 
 /**
  * Page component for the Show view
@@ -174,8 +173,7 @@ function mapStateToProps(state, props) {
 
 const enhance = compose(
     connect(mapStateToProps, { crudGetOne: crudGetOneAction }),
-    translate,
-    withChildrenAsFunction
+    translate
 );
 
 export default enhance(Show);

@@ -13,7 +13,6 @@ import {
 } from '../../actions/dataActions';
 import DefaultActions from './EditActions';
 import translate from '../../i18n/translate';
-import withChildrenAsFunction from '../withChildrenAsFunction';
 
 /**
  * Page component for the Edit view
@@ -219,8 +218,7 @@ const enhance = compose(
         crudGetOne: crudGetOneAction,
         crudUpdate: crudUpdateAction,
     }),
-    translate,
-    withChildrenAsFunction
+    translate
 );
 
 export default enhance(Edit);

@@ -43,4 +43,4 @@ export const getPermissions = (
     state,
     /** @type {getPermissionsOptions} */
     options
-) => getAdminPermissions(state.admin, options);
+) => getAdminPermissions(state ? state.admin : undefined, options);

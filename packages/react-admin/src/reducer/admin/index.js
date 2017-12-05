@@ -21,4 +21,4 @@ export default combineReducers({
 
 export const getResources = state => innerGetResources(state.resources);
 export const getPermissions = (state, options) =>
-    innerGetPermissions(state.auth, options);
+    innerGetPermissions(state ? state.auth : undefined, options);
